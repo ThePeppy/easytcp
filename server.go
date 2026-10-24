@@ -16,6 +16,9 @@ type Server struct {
 	// Packer is the message packer, will be passed to session.
 	Packer Packer
 
+	// Framer customizes frame reading and writing, will be passed to session. Can be nil.
+	Framer Framer
+
 	// Codec is the message codec, will be passed to session.
 	Codec Codec
 
@@ -46,6 +49,7 @@ type ServerOption struct {
 	ReadTimeout           time.Duration // sets the timeout for connection read.
 	WriteTimeout          time.Duration // sets the timeout for connection write.
 	Packer                Packer        // packs and unpacks packet payload, default packer is the DefaultPacker.
+	Framer                Framer        // reads and writes frames on the connection, can be nil.
 	Codec                 Codec         // encodes and decodes the message data, can be nil.
 	RespQueueSize         int           // sets the response channel size of session, DefaultRespQueueSize will be used if < 0.
 	DoNotPrintRoutes      bool          // whether to print registered route handlers to the console.
@@ -76,6 +80,7 @@ func NewServer(opt *ServerOption) *Server {
 		readTimeout:           opt.ReadTimeout,
 		writeTimeout:          opt.WriteTimeout,
 		Packer:                opt.Packer,
+		Framer:                opt.Framer,
 		Codec:                 opt.Codec,
 		printRoutes:           !opt.DoNotPrintRoutes,
 		router:                newRouter(),
@@ -164,6 +169,7 @@ func (s *Server) handleConn(conn net.Conn) {
 
 	sess := newSession(conn, &sessionOption{
 		Packer:        s.Packer,
+		Framer:        s.Framer,
 		Codec:         s.Codec,
 		respQueueSize: s.respQueueSize,
 		asyncRouter:   s.asyncRouter,

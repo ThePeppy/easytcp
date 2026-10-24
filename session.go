@@ -48,6 +48,7 @@ type session struct {
 	afterCloseHookC  chan struct{} // to close after session's on-close hook triggered
 	respStream       chan Context  // response queue channel, pushed in Send() and popped in writeOutbound()
 	packer           Packer        // to pack and unpack message
+	framer           Framer        // reads and writes frames, nil means direct conn access
 	codec            Codec         // encode/decode message data
 	ctxPool          sync.Pool     // router context pool
 	asyncRouter      bool          // calls router HandlerFunc in a goroutine if false
@@ -56,6 +57,7 @@ type session struct {
 // sessionOption is the extra options for session.
 type sessionOption struct {
 	Packer        Packer
+	Framer        Framer
 	Codec         Codec
 	respQueueSize int
 	asyncRouter   bool
@@ -74,6 +76,7 @@ func newSession(conn net.Conn, opt *sessionOption) *session {
 		afterCloseHookC:  make(chan struct{}),
 		respStream:       make(chan Context, opt.respQueueSize),
 		packer:           opt.Packer,
+		framer:           opt.Framer,
 		codec:            opt.Codec,
 		ctxPool:          sync.Pool{New: func() interface{} { return newContext() }},
 		asyncRouter:      opt.asyncRouter,
@@ -154,7 +157,7 @@ func (s *session) readInbound(router *Router, timeout time.Duration) {
 				break
 			}
 		}
-		reqMsg, err := s.packer.Unpack(s.conn)
+		reqMsg, err := unpackFrame(s.framer, s.packer, s.conn)
 		if err != nil {
 			logMsg := fmt.Sprintf("session %s unpack inbound packet err: %s", s.id, err)
 			if err == io.EOF {
@@ -212,7 +215,7 @@ func (s *session) writeOutbound(writeTimeout time.Duration) {
 			}
 		}
 
-		if _, err := s.conn.Write(outboundBytes); err != nil {
+		if err := writeFrame(s.framer, s.conn, outboundBytes); err != nil {
 			_log.Errorf("session %s conn write err: %s", s.id, err)
 			break
 		}
