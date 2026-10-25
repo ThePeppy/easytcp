@@ -2,7 +2,7 @@ package common
 
 import (
 	"bytes"
-	"github.com/DarthPestilane/easytcp"
+	"github.com/ThePeppy/easytcp"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

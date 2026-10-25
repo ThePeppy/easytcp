@@ -1,7 +1,7 @@
 package fixture
 
 import (
-	"github.com/DarthPestilane/easytcp"
+	"github.com/ThePeppy/easytcp"
 	"github.com/sirupsen/logrus"
 	"runtime/debug"
 )

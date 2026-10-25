@@ -1,9 +1,9 @@
 # EasyTCP
 
-[![gh-action](https://github.com/DarthPestilane/easytcp/actions/workflows/test.yml/badge.svg)](https://github.com/DarthPestilane/easytcp/actions/workflows/test.yml)
+[![gh-action](https://github.com/ThePeppy/easytcp/actions/workflows/test.yml/badge.svg)](https://github.com/ThePeppy/easytcp/actions/workflows/test.yml)
 [![Go Report](https://goreportcard.com/badge/github.com/darthPestilane/easytcp)](https://goreportcard.com/report/github.com/darthPestilane/easytcp)
 [![codecov](https://codecov.io/gh/DarthPestilane/easytcp/branch/master/graph/badge.svg?token=002KJ5IV4Z)](https://codecov.io/gh/DarthPestilane/easytcp)
-[![Go Reference](https://pkg.go.dev/badge/github.com/DarthPestilane/easytcp.svg)](https://pkg.go.dev/github.com/DarthPestilane/easytcp)
+[![Go Reference](https://pkg.go.dev/badge/github.com/ThePeppy/easytcp.svg)](https://pkg.go.dev/github.com/ThePeppy/easytcp)
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go#networking)
 
 ```
@@ -43,7 +43,7 @@ This package has been tested on the latest Linux, Macos and Windows.
 Use the below Go command to install EasyTCP.
 
 ```sh
-$ go get -u github.com/DarthPestilane/easytcp
+$ go get -u github.com/ThePeppy/easytcp
 ```
 
 Note: EasyTCP uses **Go Modules** to manage dependencies.
@@ -55,7 +55,7 @@ package main
 
 import (
     "fmt"
-    "github.com/DarthPestilane/easytcp"
+    "github.com/ThePeppy/easytcp"
 )
 
 func main() {
@@ -146,7 +146,7 @@ in [examples/tcp](./internal/examples/tcp).
 go test -bench=. -run=none -benchmem -benchtime=250000x
 goos: darwin
 goarch: amd64
-pkg: github.com/DarthPestilane/easytcp
+pkg: github.com/ThePeppy/easytcp
 cpu: Intel(R) Core(TM) i5-8279U CPU @ 2.40GHz
 Benchmark_NoHandler-8                     250000              4277 ns/op              83 B/op          2 allocs/op
 Benchmark_OneHandler-8                    250000              4033 ns/op              81 B/op          2 allocs/op

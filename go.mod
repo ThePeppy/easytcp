@@ -1,4 +1,4 @@
-module github.com/DarthPestilane/easytcp
+module github.com/ThePeppy/easytcp
 
 go 1.17
 

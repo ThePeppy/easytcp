@@ -3,9 +3,9 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/DarthPestilane/easytcp"
-	"github.com/DarthPestilane/easytcp/internal/examples/fixture"
-	"github.com/DarthPestilane/easytcp/internal/examples/tcp/simple_tls/common"
+	"github.com/ThePeppy/easytcp"
+	"github.com/ThePeppy/easytcp/internal/examples/fixture"
+	"github.com/ThePeppy/easytcp/internal/examples/tcp/simple_tls/common"
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"

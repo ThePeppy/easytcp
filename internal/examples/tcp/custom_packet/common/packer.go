@@ -3,7 +3,7 @@ package common
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/DarthPestilane/easytcp"
+	"github.com/ThePeppy/easytcp"
 	"github.com/spf13/cast"
 	"io"
 )

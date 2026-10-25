@@ -3,7 +3,7 @@ package easytcp
 import (
 	"context"
 	"fmt"
-	"github.com/DarthPestilane/easytcp/internal/mock"
+	"github.com/ThePeppy/easytcp/internal/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/DarthPestilane/easytcp"
-	"github.com/DarthPestilane/easytcp/internal/examples/fixture"
-	"github.com/DarthPestilane/easytcp/internal/examples/tcp/simple/common"
+	"github.com/ThePeppy/easytcp"
+	"github.com/ThePeppy/easytcp/internal/examples/fixture"
+	"github.com/ThePeppy/easytcp/internal/examples/tcp/simple/common"
 	"github.com/sirupsen/logrus"
 	"net"
 	"time"

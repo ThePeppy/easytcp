@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/DarthPestilane/easytcp"
-	"github.com/DarthPestilane/easytcp/internal/examples/fixture"
-	"github.com/DarthPestilane/easytcp/internal/examples/tcp/proto_packet/common"
+	"github.com/ThePeppy/easytcp"
+	"github.com/ThePeppy/easytcp/internal/examples/fixture"
+	"github.com/ThePeppy/easytcp/internal/examples/tcp/proto_packet/common"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
