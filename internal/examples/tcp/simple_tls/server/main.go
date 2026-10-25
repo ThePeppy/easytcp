@@ -69,10 +69,10 @@ func main() {
 func logMiddleware(next easytcp.HandlerFunc) easytcp.HandlerFunc {
 	return func(c easytcp.Context) {
 		req := c.Request()
-		log.Infof("rec <<< id:(%d) size:(%d) data: %s", req.ID, len(req.Data()), req.Data())
+		log.Infof("rec <<< id:(%d) size:(%d) data: %s", req.ID(), len(req.Data()), req.Data())
 		defer func() {
 			resp := c.Response()
-			log.Infof("snd >>> id:(%d) size:(%d) data: %s", resp.ID, len(resp.Data()), resp.Data())
+			log.Infof("snd >>> id:(%d) size:(%d) data: %s", resp.ID(), len(resp.Data()), resp.Data())
 		}()
 		next(c)
 	}

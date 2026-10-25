@@ -2,7 +2,6 @@ package easytcp
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cast"
 	"io"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"unicode/utf8"
 )
 
 func newRouter() *Router {
@@ -125,12 +125,7 @@ func (r *Router) printHandlers(addr string) {
 	var w io.Writer = os.Stdout
 
 	_, _ = fmt.Fprintf(w, "\n[EASYTCP] Message-Route Table:\n")
-	table := tablewriter.NewWriter(w)
-	table.SetHeader([]string{"Message ID", "Route Handler", "Middleware"})
-	table.SetAutoFormatHeaders(false) // don't uppercase the header
-	table.SetAutoWrapText(false)      // respect the "\n" of cell content
-	table.SetRowLine(true)
-	table.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
+	rows := [][]string{{"Message ID", "Route Handler", "Middleware"}}
 
 	// sort ids
 	ids := make([]interface{}, 0, len(r.handlerMapper))
@@ -161,13 +156,77 @@ func (r *Router) printHandlers(addr string) {
 			middlewareNames = append(middlewareNames, middlewareName)
 		}
 
-		table.Append([]string{fmt.Sprintf("%v", id), handlerName, strings.Join(middlewareNames, "\n")})
+		rows = append(rows, []string{fmt.Sprintf("%v", id), handlerName, strings.Join(middlewareNames, "\n")})
 	}
 
-	table.Render()
+	renderTable(w, rows)
 	_, _ = fmt.Fprintf(w, "[EASYTCP] Serving at: %s\n\n", addr)
 }
 
 func (r *Router) setNotFoundHandler(handler HandlerFunc) {
 	r.notFoundHandler = handler
+}
+
+// renderTable writes rows as an ASCII table with a header (rows[0]) and a line between rows.
+// Cells may contain "\n". The first two columns are right-aligned, the rest left-aligned.
+func renderTable(w io.Writer, rows [][]string) {
+	if len(rows) == 0 {
+		return
+	}
+	cols := len(rows[0])
+	cells := make([][][]string, len(rows)) // row -> col -> lines
+	widths := make([]int, cols)
+	for i, row := range rows {
+		cells[i] = make([][]string, cols)
+		for j := 0; j < cols; j++ {
+			var text string
+			if j < len(row) {
+				text = row[j]
+			}
+			lines := strings.Split(text, "\n")
+			cells[i][j] = lines
+			for _, l := range lines {
+				if n := utf8.RuneCountInString(l); n > widths[j] {
+					widths[j] = n
+				}
+			}
+		}
+	}
+
+	var sep strings.Builder
+	sep.WriteString("+")
+	for _, n := range widths {
+		sep.WriteString(strings.Repeat("-", n+2))
+		sep.WriteString("+")
+	}
+	sep.WriteString("\n")
+
+	_, _ = io.WriteString(w, sep.String())
+	for i := range cells {
+		height := 1
+		for _, c := range cells[i] {
+			if len(c) > height {
+				height = len(c)
+			}
+		}
+		for k := 0; k < height; k++ {
+			var line strings.Builder
+			line.WriteString("|")
+			for j := 0; j < cols; j++ {
+				var text string
+				if k < len(cells[i][j]) {
+					text = cells[i][j][k]
+				}
+				pad := strings.Repeat(" ", widths[j]-utf8.RuneCountInString(text))
+				if j < 2 && i > 0 {
+					line.WriteString(" " + pad + text + " |")
+				} else {
+					line.WriteString(" " + text + pad + " |")
+				}
+			}
+			line.WriteString("\n")
+			_, _ = io.WriteString(w, line.String())
+		}
+		_, _ = io.WriteString(w, sep.String())
+	}
 }
